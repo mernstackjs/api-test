@@ -1,13 +1,13 @@
 import express from "express";
-import Post from "../model/post.js";
+import Article from "../model/article.js";
 const router = express.Router();
 
 router.post("/", async (req, res) => {
   try {
-    const post = await Post.create(req.body);
+    const newArticle = await Article.create(req.body);
     res.json({
       success: true,
-      Post: post,
+      article: newArticle,
     });
   } catch (err) {
     res.json({
@@ -19,10 +19,10 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const post = await Post.find().populate("author");
+    const article = await Article.find().populate("author");
     res.json({
       success: true,
-      Post: post,
+      Article: article,
     });
   } catch (err) {
     res.json({

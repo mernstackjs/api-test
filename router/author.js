@@ -1,13 +1,14 @@
 import express from "express";
-import User from "../model/user.js";
+import Author from "../model/author.js";
+import Article from "../model/article.js";
 const router = express.Router();
 import randomBytes from "randombytes";
 
-//get All users
+//get All Authors
 router.get("/", async (req, res) => {
   try {
-    const user = await User.find().populate("post");
-    res.json(user);
+    const author = await Author.find();
+    res.json(author);
   } catch (err) {
     res.json({
       success: false,
@@ -16,13 +17,13 @@ router.get("/", async (req, res) => {
   }
 });
 
-// create users
+// create Authors
 router.post("/", async (req, res) => {
   try {
-    const user = await User.create(req.body);
+    const newAuthor = await Author.create(req.body);
     res.json({
       success: true,
-      User: user,
+      Author: newAuthor,
     });
   } catch (err) {
     res.json({
@@ -32,17 +33,21 @@ router.post("/", async (req, res) => {
   }
 });
 
-//get user by UserId
+//get Author by AuthorId
 
-router.get("/:userId", async (req, res) => {
+router.get("/:AuthorId", async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId);
+    const author = await Author.findById(req.params.AuthorId);
+    const articles = await Article.find({ author: req.params.AuthorId });
 
     res.json({
       success: true,
-      User: user,
+      Author:{
+        author,
+        articles
+      },
     });
-    console.log(user.post);
+    
   } catch (err) {
     res.json({
       success: false,
@@ -51,22 +56,22 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
-// delate users
+// delate Authors
 
-router.delete("/:userId", async (req, res) => {
+router.delete("/:AuthorId", async (req, res) => {
   try {
-    await User.findByIdAndDelete(req.params.userId);
+    await Author.findByIdAndDelete(req.params.AuthorId);
     res.send(`waa la delete`);
   } catch (err) {
     res.send(`cilad baa jirta ${err.message}`);
   }
 });
 
-//update user
+//update Author
 
 router.put("/:id", async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(
+    const author = await Author.findByIdAndUpdate(
       req.params.id,
       {
         $set: req.body,
@@ -75,7 +80,7 @@ router.put("/:id", async (req, res) => {
     );
     res.json({
       success: true,
-      User: user,
+      Author: author,
     });
   } catch (err) {
     res.send("cilad ayaa jirta");
@@ -85,7 +90,7 @@ export default router;
 
 // async function run() {
 //   try {
-//     const post = await User.where("username").equals("mukhtaar");
+//     const post = await Author.where("Authorname").equals("mukhtaar");
 //     post[0].post = "6256b561d7b326ba786ac374";
 //     post[0].save();
 //     console.log(post);

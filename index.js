@@ -1,7 +1,7 @@
 import express from "express";
 import { fetchData } from "./model/db.js";
-import userRoute from "./router/user.js";
-import postRoute from "./router/post.js";
+import AuthorRoute from "./router/author.js";
+import ArticleRoute from "./router/article.js";
 import cors from "cors";
 const PORT = 5050;
 const app = express();
@@ -12,8 +12,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/user", userRoute);
-app.use("/post", postRoute);
+app.use("/authors", AuthorRoute);
+app.use("/articles", ArticleRoute);
 
 app.listen(PORT, () => {
   fetchData();
